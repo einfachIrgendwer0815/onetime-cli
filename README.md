@@ -1,5 +1,25 @@
 # Onetime-cli
 
+[![Crates.io][crates_img]][crates_lnk]
+[![Docs.rs][docs_img]][docs_lnk]
+[![Crates.io][dwn_img]][crates_lnk]
+[![Github.com][issues_img]][issues_lnk]
+[![Github.com][license_img]][license_lnk]
+
+[crates_img]:https://img.shields.io/crates/v/onetime-cli
+[crates_lnk]:https://crates.io/crates/onetime-cli
+
+[docs_img]:https://img.shields.io/docsrs/onetime-cli/latest
+[docs_lnk]:https://docs.rs/onetime-cli
+
+[dwn_img]:https://img.shields.io/crates/d/onetime-cli
+
+[license_img]:https://img.shields.io/crates/l/onetime-cli
+[license_lnk]:https://github.com/einfachIrgendwer0815/onetime-cli/blob/main/LICENSE
+
+[issues_img]:https://img.shields.io/github/issues/einfachIrgendwer0815/onetime-cli
+[issues_lnk]:https://github.com/einfachIrgendwer0815/onetime-cli/issues
+
 Encrypt / decrypt files using the one-time-pad.
 
 ## Install
