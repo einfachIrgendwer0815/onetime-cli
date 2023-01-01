@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["einfachIrgendwer0815"]
 license = "MIT"
 edition = "2021"
+description = "Encrypt / decrypt files using the one-time-pad."
+repository = "https://github.com/einfachIrgendwer0815/onetime-cli"
+keywords = ["otp", "one-time-pad", "cli"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
