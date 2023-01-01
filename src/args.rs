@@ -4,7 +4,7 @@ use clap::Parser;
 #[clap(version, about)]
 pub struct Args {
     #[clap(subcommand)]
-    pub action: Action, 
+    pub action: Action,
 }
 
 #[derive(clap::Subcommand, Debug)]
@@ -24,7 +24,7 @@ pub struct Encrypt {
     /// Output file one. Defaults to "<FILE>.otp.0"
     #[arg(short = '1', long)]
     pub out1: Option<String>,
-    
+
     /// Output file two. Defaults to "<FILE>.otp.1"
     #[arg(short = '2', long)]
     pub out2: Option<String>,
@@ -41,8 +41,8 @@ pub struct Decrypt {
 
     /// Input file one. Defaults to "<FILE>.otp.0"
     #[arg(short = '1', long)]
-    pub in1: Option<String>, 
-    
+    pub in1: Option<String>,
+
     /// Input file one. Defaults to "<FILE>.otp.1"
     #[arg(short = '2', long)]
     pub in2: Option<String>,
