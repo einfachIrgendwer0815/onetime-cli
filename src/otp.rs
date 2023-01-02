@@ -32,6 +32,10 @@ pub fn encrypt(e: &Encrypt) -> Result<()> {
         let _ = f_out2.write(&buf_out_2[..bytes])?;
     }
 
+    if e.rm {
+        super::remove_file(&e.file)?;
+    }
+
     Ok(())
 }
 
@@ -62,6 +66,11 @@ pub fn decrypt(d: &Decrypt) -> Result<()> {
         }
 
         let _ = f_out.write(&buf_out[..bytes_1])?;
+    }
+
+    if d.rm {
+        super::remove_file(d.in1.as_ref().unwrap())?;
+        super::remove_file(d.in2.as_ref().unwrap())?;
     }
 
     Ok(())

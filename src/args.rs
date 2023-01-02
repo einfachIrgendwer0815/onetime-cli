@@ -32,6 +32,10 @@ pub struct Encrypt {
     /// Buffer size in bytes
     #[arg(long, default_value = "1048576")]
     pub buffer: u32,
+
+    /// Delete input file after encryption
+    #[arg(short, long, default_value = "false")]
+    pub rm: bool,
 }
 
 #[derive(clap::Args, Debug)]
@@ -50,4 +54,8 @@ pub struct Decrypt {
     /// Buffer size in bytes
     #[arg(long, default_value = "1048576")]
     pub buffer: u32,
+
+    /// Delete input files after decryption
+    #[arg(short, long, default_value = "false")]
+    pub rm: bool,
 }
