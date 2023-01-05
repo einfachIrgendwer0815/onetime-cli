@@ -33,9 +33,6 @@
 pub mod args;
 
 mod otp;
+mod fs;
 
 pub use otp::{decrypt, encrypt};
-
-fn remove_file(file: &str) -> std::io::Result<()> {
-    std::fs::remove_file(file)
-}
