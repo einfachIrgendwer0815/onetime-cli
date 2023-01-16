@@ -8,6 +8,9 @@ use rand::Rng;
 /// ## Panic
 /// Will panic if [Encrypt].out1 or [Encrypt].out2 is `None`
 pub fn encrypt(e: &Encrypt) -> Result<(), (String, String)> {
+    assert!(e.out1.is_some());
+    assert!(e.out2.is_some());
+
     let mut f_in = open_file(&e.file, Mode::Open)?;
     let mut f_out1 = open_file(e.out1.as_ref().unwrap(), Mode::Create)?;
     let mut f_out2 = open_file(e.out2.as_ref().unwrap(), Mode::Create)?;
@@ -46,6 +49,9 @@ pub fn encrypt(e: &Encrypt) -> Result<(), (String, String)> {
 /// ## Panic
 /// Will panic if [Decrypt].in1 or [Decrypt].in2 is `None`
 pub fn decrypt(d: &Decrypt) -> Result<(), (String, String)> {
+    assert!(d.in1.is_some());
+    assert!(d.in1.is_some());
+
     let mut f_in_1 = open_file(d.in1.as_ref().unwrap(), Mode::Open)?;
     let mut f_in_2 = open_file(d.in2.as_ref().unwrap(), Mode::Open)?;
     let mut f_out = open_file(&d.file, Mode::Create)?;
