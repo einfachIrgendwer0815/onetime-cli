@@ -3,6 +3,10 @@ use crate::fs::{Mode, open_file, read, write, remove_file};
 
 use rand::Rng;
 
+/// Encrypts a file using the options wrapped in an [Encrypt].
+/// 
+/// ## Panic
+/// Will panic if [Encrypt].out1 or [Encrypt].out2 is `None`
 pub fn encrypt(e: &Encrypt) -> Result<(), (String, String)> {
     let mut f_in = open_file(&e.file, Mode::Open)?;
     let mut f_out1 = open_file(e.out1.as_ref().unwrap(), Mode::Create)?;
@@ -37,6 +41,10 @@ pub fn encrypt(e: &Encrypt) -> Result<(), (String, String)> {
     Ok(())
 }
 
+/// Decrypts a file using the options wrapped in an [Decrypt].
+/// 
+/// ## Panic
+/// Will panic if [Decrypt].in1 or [Decrypt].in2 is `None`
 pub fn decrypt(d: &Decrypt) -> Result<(), (String, String)> {
     let mut f_in_1 = open_file(d.in1.as_ref().unwrap(), Mode::Open)?;
     let mut f_in_2 = open_file(d.in2.as_ref().unwrap(), Mode::Open)?;
