@@ -38,6 +38,20 @@ pub struct Encrypt {
     pub rm: bool,
 }
 
+impl Encrypt {
+    /// Fills `self.out1` and `self.out2` with default values
+    /// if they are `None`. So afterwards, `self.out1` and `self.out2`
+    /// are always `Some`.
+    pub fn set_out_files(&mut self) {
+        if self.out1.is_none() {
+            self.out1 = Some(self.file.clone() + ".otp.0");
+        }
+        if self.out2.is_none() {
+            self.out2 = Some(self.file.clone() + ".otp.1")
+        }
+    }
+}
+
 #[derive(clap::Args, Debug)]
 pub struct Decrypt {
     /// Output file name. This is the name of the decrypted file.
@@ -58,4 +72,18 @@ pub struct Decrypt {
     /// Delete input files after decryption
     #[arg(short, long, default_value = "false")]
     pub rm: bool,
+}
+
+impl Decrypt {
+    /// Fills `self.in1` and `self.in2` with default values
+    /// if they are `None`. So afterwards, `self.in1` and `self.in2`
+    /// are always `Some`.
+    pub fn set_in_files(&mut self) {
+        if self.in1.is_none() {
+            self.in1 = Some(self.file.clone() + ".otp.0");
+        }
+        if self.in2.is_none() {
+            self.in2 = Some(self.file.clone() + ".otp.1")
+        }
+    }
 }
