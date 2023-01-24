@@ -21,6 +21,7 @@ fn main() {
                 }
                 Err((f, e)) => {
                     eprintln!("{}: File: '{}'; {}{}{}", RED_ERROR_TEXT, f, BOLD_START, e, STYLE_END);
+                    std::process::exit(1)
                 }
             }
         }
@@ -33,6 +34,7 @@ fn main() {
                 }
                 Err((f, e)) => {
                     eprintln!("{}: File: '{}'; {}{}{}", RED_ERROR_TEXT, f, BOLD_START, e, STYLE_END);
+                    std::process::exit(1)
                 }
             }
         }
