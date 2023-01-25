@@ -1,8 +1,7 @@
 use std::ffi::OsString;
 use std::fs::{read_dir, remove_file, remove_dir, create_dir, copy};
 use std::fs::File;
-use std::io::Read;
-use std::str::FromStr;
+use std::io::{Read, ErrorKind};
 use assert_cmd::Command;
 use md5_rs::Context;
 
@@ -16,18 +15,51 @@ const FILE1_PATH: &str = "./tests/files/file1.txt";
 
 
 fn copy_files(dir_name: &str) -> std::io::Result<()> {
-    for entry in read_dir(FILES_ORIG_DIR.to_owned() + "/" + dir_name)? {
-        let entry = entry?;
-        let path = entry.path();
+    fn traverse_dir(dir: &str, dest_dir: &OsString) -> std::io::Result<()> {
+        for entry in read_dir(dir)? {
+            let entry = entry?;
+            let path = entry.path();
 
-        let mut new_file = OsString::from_str(FILES_DIR).unwrap();
-        new_file.push("/");
-        new_file.push(path.file_name().unwrap());
-       
-        if path.is_file() {
-            copy(path, new_file)?;
+            if path.is_dir() {
+                let path_str = path.to_str().unwrap();
+                let new_dest_dir = {
+                    let dir_name = path.file_name().unwrap();
+
+                    let mut dir = dest_dir.to_owned();
+                    dir.push("/");
+                    dir.push(dir_name);
+
+                    dir
+                };
+
+                match create_dir(&new_dest_dir) {
+                    Ok(_) => {},
+                    Err(e) => {
+                        match e.kind() {
+                            ErrorKind::AlreadyExists => (),
+                            _ => {
+                                return Err(e);
+                            }
+                        }
+                    }
+                };
+
+                traverse_dir(path_str, &new_dest_dir)?
+            } else if path.is_file() {
+                let mut new_file = dest_dir.to_owned();
+                new_file.push("/");
+                new_file.push(path.file_name().unwrap());
+
+                copy(path, new_file)?;
+            }
         }
+
+        Ok(())
     }
+
+    let dir_name = FILES_ORIG_DIR.to_owned() + "/" + dir_name;
+
+    traverse_dir(&dir_name, &OsString::from(FILES_DIR))?;
 
     Ok(())
 }
