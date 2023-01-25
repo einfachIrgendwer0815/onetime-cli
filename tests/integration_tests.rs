@@ -1,5 +1,5 @@
 use std::ffi::OsString;
-use std::fs::{read_dir, remove_file, remove_dir, create_dir, copy};
+use std::fs::{read_dir, remove_file, remove_dir_all, create_dir, copy};
 use std::fs::File;
 use std::io::{Read, ErrorKind};
 use assert_cmd::Command;
@@ -65,12 +65,23 @@ fn copy_files(dir_name: &str) -> std::io::Result<()> {
 }
 
 fn clear_files() {
-    #[allow(unused_must_use)]
-    {
-        remove_dir(FILES_DIR);
-        create_dir(FILES_DIR);
+    if let Err(e) = remove_dir_all(FILES_DIR) {
+        match e.kind() {
+            ErrorKind::NotFound => (),
+            _ => {
+                panic!("{}", e);
+            }
+        }
     }
-
+    
+    if let Err(e) = create_dir(FILES_DIR) {
+        match e.kind() {
+            ErrorKind::AlreadyExists => (),
+            _ => {
+                panic!("{}", e);
+            }
+        }
+    }
 }
 
 fn get_md5_sum(path: &str) -> Result<[u8; 16], std::io::Error> {
