@@ -1,16 +1,14 @@
-use std::ffi::OsString;
-use std::fs::{read_dir, remove_file, remove_dir_all, create_dir, create_dir_all, copy, metadata};
-use std::fs::File;
-use std::io::{Read, ErrorKind};
 use assert_cmd::Command;
 use md5_rs::Context;
-
+use std::ffi::OsString;
+use std::fs::File;
+use std::fs::{copy, create_dir, create_dir_all, metadata, read_dir, remove_dir_all, remove_file};
+use std::io::{ErrorKind, Read};
 
 const CARGO_BIN_NAME: &str = "onetime-cli";
 
 const FILES_DIR: &str = "./tests/files";
 const FILES_ORIG_DIR: &str = "./tests/files_original";
-
 
 fn copy_files(input_dir: &str, dest_dir: &str) -> std::io::Result<()> {
     fn traverse_dir(dir: &str, dest_dir: &OsString) -> std::io::Result<()> {
@@ -31,15 +29,13 @@ fn copy_files(input_dir: &str, dest_dir: &str) -> std::io::Result<()> {
                 };
 
                 match create_dir(&new_dest_dir) {
-                    Ok(_) => {},
-                    Err(e) => {
-                        match e.kind() {
-                            ErrorKind::AlreadyExists => (),
-                            _ => {
-                                return Err(e);
-                            }
+                    Ok(_) => {}
+                    Err(e) => match e.kind() {
+                        ErrorKind::AlreadyExists => (),
+                        _ => {
+                            return Err(e);
                         }
-                    }
+                    },
                 };
 
                 traverse_dir(path_str, &new_dest_dir)?
@@ -140,7 +136,7 @@ fn test_encrpyt_decrypt() {
         .arg("decrypt")
         .arg("file1.txt")
         .assert();
-    
+
     assert
         .success()
         .stdout("Successfully decrypted file1.txt\n")
@@ -153,9 +149,16 @@ fn test_encrpyt_decrypt() {
 
 #[test]
 fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
-    copy_files("fileset_1", "test_encrpyt_decrypt_with_manually_set_input_and_output_files").unwrap();
+    copy_files(
+        "fileset_1",
+        "test_encrpyt_decrypt_with_manually_set_input_and_output_files",
+    )
+    .unwrap();
 
-    let original_md5 = get_md5_sum("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt").unwrap();
+    let original_md5 = get_md5_sum(
+        "./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt",
+    )
+    .unwrap();
 
     // Encrypt command
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
@@ -171,8 +174,11 @@ fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
         .success()
         .stdout("Successfully encrypted file1.txt\n")
         .stderr("");
-    
-    remove_file("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt").unwrap();
+
+    remove_file(
+        "./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt",
+    )
+    .unwrap();
     assert_path_exists(&format!("{FILES_DIR}/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part0"));
     assert_path_exists(&format!("{FILES_DIR}/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part1"));
 
@@ -185,13 +191,16 @@ fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
         .args(["-2", "file.encrypted.part0"])
         .arg("file1.txt")
         .assert();
-    
+
     assert
         .success()
         .stdout("Successfully decrypted file1.txt\n")
         .stderr("");
 
-    let md5_now = get_md5_sum("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt").unwrap();
+    let md5_now = get_md5_sum(
+        "./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt",
+    )
+    .unwrap();
 
     assert_eq!(original_md5, md5_now);
 }

@@ -1,10 +1,10 @@
 use crate::args::{Decrypt, Encrypt};
-use crate::fs::{Mode, open_file, read, write, remove_file};
+use crate::fs::{open_file, read, remove_file, write, Mode};
 
 use rand::Rng;
 
 /// Encrypts a file using the options wrapped in an [Encrypt].
-/// 
+///
 /// ## Panic
 /// Will panic if [Encrypt].out1 or [Encrypt].out2 is `None`
 pub fn encrypt(e: &Encrypt) -> Result<(), (String, String)> {
@@ -45,7 +45,7 @@ pub fn encrypt(e: &Encrypt) -> Result<(), (String, String)> {
 }
 
 /// Decrypts a file using the options wrapped in an [Decrypt].
-/// 
+///
 /// ## Panic
 /// Will panic if [Decrypt].in1 or [Decrypt].in2 is `None`
 pub fn decrypt(d: &Decrypt) -> Result<(), (String, String)> {

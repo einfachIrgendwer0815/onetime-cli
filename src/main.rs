@@ -2,17 +2,15 @@ use clap::Parser;
 
 use onetime_cli::args::{Action, Args};
 
-
 pub const RED_ERROR_TEXT: &str = "\x1b[1;91mError\x1b[0m";
 pub const BOLD_START: &str = "\x1b[01m";
 pub const STYLE_END: &str = "\x1b[0m";
-
 
 fn main() {
     let args = Args::parse();
 
     match args.action {
-        Action::Encrypt(mut e) => {       
+        Action::Encrypt(mut e) => {
             e.set_out_files();
 
             match onetime_cli::encrypt(&e) {
@@ -27,7 +25,7 @@ fn main() {
         }
         Action::Decrypt(mut d) => {
             d.set_in_files();
-            
+
             match onetime_cli::decrypt(&d) {
                 Ok(_) => {
                     println!("Successfully decrypted {}", &d.file);

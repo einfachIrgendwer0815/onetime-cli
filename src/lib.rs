@@ -1,7 +1,7 @@
 //! # Onetime-cli
 //!
 //!Encrypt / decrypt files using the one-time-pad.
-//! 
+//!
 //! ## Usage
 //!
 //! The simplest way to encrypt a file called `secret.txt` is:
@@ -32,7 +32,7 @@
 
 pub mod args;
 
-mod otp;
 mod fs;
+mod otp;
 
 pub use otp::{decrypt, encrypt};
