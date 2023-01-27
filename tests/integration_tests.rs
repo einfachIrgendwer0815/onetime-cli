@@ -1,5 +1,5 @@
 use std::ffi::OsString;
-use std::fs::{read_dir, remove_file, remove_dir_all, create_dir, copy};
+use std::fs::{read_dir, remove_file, remove_dir_all, create_dir, create_dir_all, copy};
 use std::fs::File;
 use std::io::{Read, ErrorKind};
 use assert_cmd::Command;
@@ -11,10 +11,8 @@ const CARGO_BIN_NAME: &str = "onetime-cli";
 const FILES_DIR: &str = "./tests/files";
 const FILES_ORIG_DIR: &str = "./tests/files_original";
 
-const FILE1_PATH: &str = "./tests/files/file1.txt";
 
-
-fn copy_files(dir_name: &str) -> std::io::Result<()> {
+fn copy_files(input_dir: &str, dest_dir: &str) -> std::io::Result<()> {
     fn traverse_dir(dir: &str, dest_dir: &OsString) -> std::io::Result<()> {
         for entry in read_dir(dir)? {
             let entry = entry?;
@@ -57,26 +55,31 @@ fn copy_files(dir_name: &str) -> std::io::Result<()> {
         Ok(())
     }
 
-    let dir_name = FILES_ORIG_DIR.to_owned() + "/" + dir_name;
+    let orig_dir_name = FILES_ORIG_DIR.to_owned() + "/" + input_dir;
+    let dest_dir = FILES_DIR.to_owned() + "/" + dest_dir;
 
-    traverse_dir(&dir_name, &OsString::from(FILES_DIR))?;
+    clear_files(&dest_dir);
+
+    if let Err(e) = create_dir_all(&dest_dir) {
+        match e.kind() {
+            ErrorKind::AlreadyExists => (),
+            _ => {
+                panic!("{dest_dir}: {e}");
+            }
+        }
+    };
+
+    traverse_dir(&orig_dir_name, &OsString::from(dest_dir))?;
 
     Ok(())
 }
 
-fn clear_files() {
-    if let Err(e) = remove_dir_all(FILES_DIR) {
+fn clear_files(dir_name: &str) {
+    let dir_name = FILES_DIR.to_owned() + "/" + dir_name;
+
+    if let Err(e) = remove_dir_all(dir_name) {
         match e.kind() {
             ErrorKind::NotFound => (),
-            _ => {
-                panic!("{}", e);
-            }
-        }
-    }
-    
-    if let Err(e) = create_dir(FILES_DIR) {
-        match e.kind() {
-            ErrorKind::AlreadyExists => (),
             _ => {
                 panic!("{}", e);
             }
@@ -105,15 +108,14 @@ fn get_md5_sum(path: &str) -> Result<[u8; 16], std::io::Error> {
 
 #[test]
 fn test_encrpyt_decrypt() {
-    clear_files();
-    copy_files("test_encrypt_decrypt").unwrap();
+    copy_files("fileset_1", "test_encrypt_decrypt").unwrap();
 
-    let original_md5 = get_md5_sum(FILE1_PATH).unwrap();
+    let original_md5 = get_md5_sum("./tests/files/test_encrypt_decrypt/file1.txt").unwrap();
 
     // Encrypt command
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
     let assert = cmd
-        .current_dir(FILES_DIR)
+        .current_dir("./tests/files/test_encrypt_decrypt")
         .arg("encrypt")
         .arg("file1.txt")
         .assert();
@@ -123,12 +125,12 @@ fn test_encrpyt_decrypt() {
         .stdout("Successfully encrypted file1.txt\n")
         .stderr("");
 
-    remove_file(FILE1_PATH).unwrap();
+    remove_file("./tests/files/test_encrypt_decrypt/file1.txt").unwrap();
 
     // Decrypt command
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
     let assert = cmd
-        .current_dir(FILES_DIR)
+        .current_dir("./tests/files/test_encrypt_decrypt")
         .arg("decrypt")
         .arg("file1.txt")
         .assert();
@@ -138,7 +140,7 @@ fn test_encrpyt_decrypt() {
         .stdout("Successfully decrypted file1.txt\n")
         .stderr("");
 
-    let md5_now = get_md5_sum(FILE1_PATH).unwrap();
+    let md5_now = get_md5_sum("./tests/files/test_encrypt_decrypt/file1.txt").unwrap();
 
     assert_eq!(original_md5, md5_now);
 }
