@@ -55,8 +55,8 @@ fn copy_files(input_dir: &str, dest_dir: &str) -> std::io::Result<()> {
         Ok(())
     }
 
-    let orig_dir_name = FILES_ORIG_DIR.to_owned() + "/" + input_dir;
-    let dest_dir = FILES_DIR.to_owned() + "/" + dest_dir;
+    let orig_dir_name = format!("{FILES_ORIG_DIR}/{input_dir}");
+    let dest_dir = format!("{FILES_DIR}/{dest_dir}");
 
     clear_files(&dest_dir);
 
@@ -75,7 +75,7 @@ fn copy_files(input_dir: &str, dest_dir: &str) -> std::io::Result<()> {
 }
 
 fn clear_files(dir_name: &str) {
-    let dir_name = FILES_DIR.to_owned() + "/" + dir_name;
+    let dir_name = format!("{FILES_DIR}/{dir_name}");
 
     if let Err(e) = remove_dir_all(dir_name) {
         match e.kind() {
