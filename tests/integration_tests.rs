@@ -1,5 +1,5 @@
 use std::ffi::OsString;
-use std::fs::{read_dir, remove_file, remove_dir_all, create_dir, create_dir_all, copy};
+use std::fs::{read_dir, remove_file, remove_dir_all, create_dir, create_dir_all, copy, metadata};
 use std::fs::File;
 use std::io::{Read, ErrorKind};
 use assert_cmd::Command;
@@ -106,6 +106,12 @@ fn get_md5_sum(path: &str) -> Result<[u8; 16], std::io::Error> {
     Ok(ctx.finish())
 }
 
+fn assert_path_exists(path: &str) {
+    if let Err(e) = metadata(path) {
+        panic!("{path}: {e}");
+    }
+}
+
 #[test]
 fn test_encrpyt_decrypt() {
     copy_files("fileset_1", "test_encrypt_decrypt").unwrap();
@@ -141,6 +147,51 @@ fn test_encrpyt_decrypt() {
         .stderr("");
 
     let md5_now = get_md5_sum("./tests/files/test_encrypt_decrypt/file1.txt").unwrap();
+
+    assert_eq!(original_md5, md5_now);
+}
+
+#[test]
+fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
+    copy_files("fileset_1", "test_encrpyt_decrypt_with_manually_set_input_and_output_files").unwrap();
+
+    let original_md5 = get_md5_sum("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt").unwrap();
+
+    // Encrypt command
+    let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
+    let assert = cmd
+        .current_dir("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files")
+        .arg("encrypt")
+        .args(["-1", "file.encrypted.part0"])
+        .args(["-2", "file.encrypted.part1"])
+        .arg("file1.txt")
+        .assert();
+
+    assert
+        .success()
+        .stdout("Successfully encrypted file1.txt\n")
+        .stderr("");
+    
+    remove_file("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt").unwrap();
+    assert_path_exists(&format!("{FILES_DIR}/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part0"));
+    assert_path_exists(&format!("{FILES_DIR}/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part1"));
+
+    // Decrypt command
+    let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
+    let assert = cmd
+        .current_dir("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files")
+        .arg("decrypt")
+        .args(["-1", "file.encrypted.part1"])
+        .args(["-2", "file.encrypted.part0"])
+        .arg("file1.txt")
+        .assert();
+    
+    assert
+        .success()
+        .stdout("Successfully decrypted file1.txt\n")
+        .stderr("");
+
+    let md5_now = get_md5_sum("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt").unwrap();
 
     assert_eq!(original_md5, md5_now);
 }
