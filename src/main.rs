@@ -20,7 +20,7 @@ fn main() {
                     println!("Successfully encrypted {}", &e.file);
                 }
                 Err((f, e)) => {
-                    eprintln!("{}: File: '{}'; {}{}{}", RED_ERROR_TEXT, f, BOLD_START, e, STYLE_END);
+                    eprintln!("{RED_ERROR_TEXT}: File: '{f}'; {BOLD_START}{e}{STYLE_END}");
                     std::process::exit(1)
                 }
             }
@@ -33,7 +33,7 @@ fn main() {
                     println!("Successfully decrypted {}", &d.file);
                 }
                 Err((f, e)) => {
-                    eprintln!("{}: File: '{}'; {}{}{}", RED_ERROR_TEXT, f, BOLD_START, e, STYLE_END);
+                    eprintln!("{RED_ERROR_TEXT}: File: '{f}'; {BOLD_START}{e}{STYLE_END}");
                     std::process::exit(1)
                 }
             }
