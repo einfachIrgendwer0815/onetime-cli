@@ -109,8 +109,8 @@ fn assert_path_exists(path: &str) {
 }
 
 #[test]
-fn test_encrpyt_decrypt() {
-    copy_files("fileset_1", "test_encrypt_decrypt").unwrap();
+fn test_encrypt_decrypt() {
+    copy_files("files_1", "test_encrypt_decrypt").unwrap();
 
     let original_md5 = get_md5_sum("./tests/files/test_encrypt_decrypt/file1.txt").unwrap();
 
@@ -148,22 +148,22 @@ fn test_encrpyt_decrypt() {
 }
 
 #[test]
-fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
+fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
     copy_files(
-        "fileset_1",
-        "test_encrpyt_decrypt_with_manually_set_input_and_output_files",
+        "files_1",
+        "test_encrypt_decrypt_with_manually_set_input_and_output_files",
     )
     .unwrap();
 
     let original_md5 = get_md5_sum(
-        "./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt",
+        "./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt",
     )
     .unwrap();
 
     // Encrypt command
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
     let assert = cmd
-        .current_dir("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files")
+        .current_dir("./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files")
         .arg("encrypt")
         .args(["-1", "file.encrypted.part0"])
         .args(["-2", "file.encrypted.part1"])
@@ -176,16 +176,16 @@ fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
         .stderr("");
 
     remove_file(
-        "./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt",
+        "./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt",
     )
     .unwrap();
-    assert_path_exists(&format!("{FILES_DIR}/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part0"));
-    assert_path_exists(&format!("{FILES_DIR}/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part1"));
+    assert_path_exists(&format!("{FILES_DIR}/test_encrypt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part0"));
+    assert_path_exists(&format!("{FILES_DIR}/test_encrypt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part1"));
 
     // Decrypt command
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
     let assert = cmd
-        .current_dir("./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files")
+        .current_dir("./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files")
         .arg("decrypt")
         .args(["-1", "file.encrypted.part1"])
         .args(["-2", "file.encrypted.part0"])
@@ -198,7 +198,7 @@ fn test_encrpyt_decrypt_with_manually_set_input_and_output_files() {
         .stderr("");
 
     let md5_now = get_md5_sum(
-        "./tests/files/test_encrpyt_decrypt_with_manually_set_input_and_output_files/file1.txt",
+        "./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt",
     )
     .unwrap();
 
