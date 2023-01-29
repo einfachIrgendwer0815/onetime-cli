@@ -35,4 +35,4 @@ pub mod args;
 mod fs;
 mod otp;
 
-pub use otp::{decrypt, encrypt};
+pub use otp::{decrypt, decrypt_file, encrypt, encrypt_file};

@@ -13,7 +13,7 @@ fn main() {
         Action::Encrypt(mut e) => {
             e.set_out_files();
 
-            match onetime_cli::encrypt(&e) {
+            match onetime_cli::encrypt_file(&e) {
                 Ok(_) => {
                     println!("Successfully encrypted {}", &e.file);
                 }
@@ -26,7 +26,7 @@ fn main() {
         Action::Decrypt(mut d) => {
             d.set_in_files();
 
-            match onetime_cli::decrypt(&d) {
+            match onetime_cli::decrypt_file(&d) {
                 Ok(_) => {
                     println!("Successfully decrypted {}", &d.file);
                 }
