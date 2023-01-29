@@ -9,6 +9,7 @@ This project uses semantic versioning (SemVer).
 
 ### Added
   - Exit with code 1 on error
+  - Custom error representation (onetime_cli::Error)
 
 ### Changed
   - Improved error messages
@@ -18,6 +19,7 @@ This project uses semantic versioning (SemVer).
   - Moved previous functionality of onetime_cli::decrypt to onetime_cli::decrypt_file
   - onetime_cli::encrypt now encrypts data from an array using the one-time-pad
   - onetime_cli::decrypt now decrypts data into an array using the one-time-pad
+  - Return type of the functions onetime_cli::{encrypt_file, decrypt_file} changed to Result<(), onetime_cli::Error>
 
 
 ## v0.2.0 -- 2023-01-02

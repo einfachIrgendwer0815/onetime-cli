@@ -31,8 +31,10 @@
 //! ```
 
 pub mod args;
+mod error;
 
 mod fs;
 mod otp;
 
+pub use error::{Error, IoError};
 pub use otp::{decrypt, decrypt_file, encrypt, encrypt_file};

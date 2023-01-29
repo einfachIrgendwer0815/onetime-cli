@@ -1,6 +1,7 @@
 use clap::Parser;
 
 use onetime_cli::args::{Action, Args};
+use onetime_cli::Error;
 
 pub const RED_ERROR_TEXT: &str = "\x1b[1;91mError\x1b[0m";
 pub const BOLD_START: &str = "\x1b[01m";
@@ -17,8 +18,18 @@ fn main() {
                 Ok(_) => {
                     println!("Successfully encrypted {}", &e.file);
                 }
-                Err((f, e)) => {
-                    eprintln!("{RED_ERROR_TEXT}: File: '{f}'; {BOLD_START}{e}{STYLE_END}");
+                Err(e) => {
+                    match e {
+                        Error::IoError(io_e) => {
+                            eprintln!(
+                                "{RED_ERROR_TEXT}: File: {0}; {BOLD_START}{1}{STYLE_END}",
+                                io_e.file, io_e.error
+                            );
+                        }
+                        Error::InvalidInput(s) => {
+                            eprintln!("{RED_ERROR_TEXT}: {s}");
+                        }
+                    }
                     std::process::exit(1)
                 }
             }
@@ -30,8 +41,18 @@ fn main() {
                 Ok(_) => {
                     println!("Successfully decrypted {}", &d.file);
                 }
-                Err((f, e)) => {
-                    eprintln!("{RED_ERROR_TEXT}: File: '{f}'; {BOLD_START}{e}{STYLE_END}");
+                Err(e) => {
+                    match e {
+                        Error::IoError(io_e) => {
+                            eprintln!(
+                                "{RED_ERROR_TEXT}: File: {0}; {BOLD_START}{1}{STYLE_END}",
+                                io_e.file, io_e.error
+                            );
+                        }
+                        Error::InvalidInput(s) => {
+                            eprintln!("{RED_ERROR_TEXT}: {s}");
+                        }
+                    }
                     std::process::exit(1)
                 }
             }

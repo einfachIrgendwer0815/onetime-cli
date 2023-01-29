@@ -1,6 +1,7 @@
 use crate::args::{Decrypt, Encrypt};
 use crate::fs::Mode;
 use crate::fs::{open_file, read, remove_file, write};
+use crate::Error;
 
 use rand::Rng;
 
@@ -99,7 +100,7 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 ///     },
 /// };
 /// ```
-pub fn encrypt_file(e: &Encrypt) -> Result<(), (String, String)> {
+pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
     assert!(e.out1.is_some());
     assert!(e.out2.is_some());
 
@@ -170,7 +171,7 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), (String, String)> {
 ///     },
 /// };
 /// ```
-pub fn decrypt_file(d: &Decrypt) -> Result<(), (String, String)> {
+pub fn decrypt_file(d: &Decrypt) -> Result<(), Error> {
     assert!(d.in1.is_some());
     assert!(d.in2.is_some());
 
@@ -187,9 +188,8 @@ pub fn decrypt_file(d: &Decrypt) -> Result<(), (String, String)> {
         let bytes_2 = read(&mut f_in2, &mut buf_in2)?;
 
         if bytes_1 != bytes_2 {
-            return Err((
-                d.file.clone(),
-                "The two input files must be of the same size!".to_string(),
+            return Err(Error::InvalidInput(
+                "The two input files differ in size!".to_string(),
             ));
         }
 
