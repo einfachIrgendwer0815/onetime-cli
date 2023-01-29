@@ -108,6 +108,17 @@ fn assert_path_exists(path: &str) {
     }
 }
 
+fn assert_path_not_found(path: &str) {
+    if let Err(e) = metadata(path) {
+        match e.kind() {
+            ErrorKind::NotFound => (),
+            _ => panic!("{path}: {e}"),
+        }
+    } else {
+        panic!("{path} exists");
+    }
+}
+
 #[test]
 fn test_encrypt_decrypt() {
     copy_files("files_1", "test_encrypt_decrypt").unwrap();
@@ -203,4 +214,48 @@ fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
     .unwrap();
 
     assert_eq!(original_md5, md5_now);
+}
+
+#[test]
+fn test_delete_after_encryption() {
+    copy_files("files_1", "test_delete_after_encryption").unwrap();
+
+    let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
+    let assert = cmd
+        .current_dir("./tests/files/test_delete_after_encryption")
+        .arg("encrypt")
+        .arg("-r")
+        .arg("file1.txt")
+        .assert();
+
+    assert
+        .success()
+        .stdout("Successfully encrypted file1.txt\n")
+        .stderr("");
+
+    assert_path_not_found(&format!("{FILES_DIR}/test_delete_after_encryption/file1.txt"));
+    assert_path_exists(&format!("{FILES_DIR}/test_delete_after_encryption/file1.txt.otp.0"));
+    assert_path_exists(&format!("{FILES_DIR}/test_delete_after_encryption/file1.txt.otp.1"));
+}
+
+#[test]
+fn test_delete_after_decryption() {
+    copy_files("files_2", "test_delete_after_decryption").unwrap();
+
+    let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
+    let assert = cmd
+        .current_dir("./tests/files/test_delete_after_decryption")
+        .arg("decrypt")
+        .arg("-r")
+        .arg("file2.txt")
+        .assert();
+
+    assert
+        .success()
+        .stdout("Successfully decrypted file2.txt\n")
+        .stderr("");
+
+    assert_path_not_found(&format!("{FILES_DIR}/test_delete_after_decryption/file2.txt.otp.0"));
+    assert_path_not_found(&format!("{FILES_DIR}/test_delete_after_decryption/file2.txt.otp.1"));
+    assert_path_exists(&format!("{FILES_DIR}/test_delete_after_decryption/file2.txt"));
 }
