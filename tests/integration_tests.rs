@@ -190,8 +190,8 @@ fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
         "./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt",
     )
     .unwrap();
-    assert_path_exists(&format!("{FILES_DIR}/test_encrypt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part0"));
-    assert_path_exists(&format!("{FILES_DIR}/test_encrypt_decrypt_with_manually_set_input_and_output_files/file.encrypted.part1"));
+    assert_path_exists(&format!("{FILES_DIR}/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt.encrypted.part0"));
+    assert_path_exists(&format!("{FILES_DIR}/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt.encrypted.part1"));
 
     // Decrypt command
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
