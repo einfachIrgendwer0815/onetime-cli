@@ -26,6 +26,7 @@ This project uses semantic versioning (SemVer).
 ### Removed
   - Parameters `-1`/`--out1` and `-2`/`--out2` of subcommand `encrypt`
   - Parameters `-1`/`--in1` and `-2`/`--in2` of subcommand `decrypt`
+  - `-r` as alias for `--rm`. `--rm` is not removed, only `-r`.
 
 
 ## v0.2.0 -- 2023-01-02

@@ -224,7 +224,7 @@ fn test_delete_after_encryption() {
     let assert = cmd
         .current_dir("./tests/files/test_delete_after_encryption")
         .arg("encrypt")
-        .arg("-r")
+        .arg("--rm")
         .arg("file1.txt")
         .assert();
 
@@ -246,7 +246,7 @@ fn test_delete_after_decryption() {
     let assert = cmd
         .current_dir("./tests/files/test_delete_after_decryption")
         .arg("decrypt")
-        .arg("-r")
+        .arg("--rm")
         .arg("file2.txt")
         .assert();
 

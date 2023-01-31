@@ -50,7 +50,7 @@ pub struct Encrypt {
     pub buffer: u32,
 
     /// Delete input file after encryption
-    #[arg(short, long, default_value = "false")]
+    #[arg(long, default_value = "false")]
     pub rm: bool,
 }
 
@@ -88,6 +88,6 @@ pub struct Decrypt {
     pub buffer: u32,
 
     /// Delete input files after decryption
-    #[arg(short, long, default_value = "false")]
+    #[arg(long, default_value = "false")]
     pub rm: bool,
 }
