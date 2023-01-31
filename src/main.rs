@@ -11,47 +11,43 @@ fn main() {
     let args = Args::parse();
 
     match args.action {
-        Action::Encrypt(e) => {
-            match onetime_cli::encrypt_file(&e) {
-                Ok(_) => {
-                    println!("Successfully encrypted {}", &e.file);
-                }
-                Err(e) => {
-                    match e {
-                        Error::IoError(io_e) => {
-                            eprintln!(
-                                "{RED_ERROR_TEXT}: File: {0}; {BOLD_START}{1}{STYLE_END}",
-                                io_e.file, io_e.error
-                            );
-                        }
-                        Error::InvalidInput(s) => {
-                            eprintln!("{RED_ERROR_TEXT}: {s}");
-                        }
-                    }
-                    std::process::exit(1)
-                }
+        Action::Encrypt(e) => match onetime_cli::encrypt_file(&e) {
+            Ok(_) => {
+                println!("Successfully encrypted {}", &e.file);
             }
-        }
-        Action::Decrypt(d) => {
-            match onetime_cli::decrypt_file(&d) {
-                Ok(_) => {
-                    println!("Successfully decrypted {}", &d.file);
-                }
-                Err(e) => {
-                    match e {
-                        Error::IoError(io_e) => {
-                            eprintln!(
-                                "{RED_ERROR_TEXT}: File: {0}; {BOLD_START}{1}{STYLE_END}",
-                                io_e.file, io_e.error
-                            );
-                        }
-                        Error::InvalidInput(s) => {
-                            eprintln!("{RED_ERROR_TEXT}: {s}");
-                        }
+            Err(e) => {
+                match e {
+                    Error::IoError(io_e) => {
+                        eprintln!(
+                            "{RED_ERROR_TEXT}: File: {0}; {BOLD_START}{1}{STYLE_END}",
+                            io_e.file, io_e.error
+                        );
                     }
-                    std::process::exit(1)
+                    Error::InvalidInput(s) => {
+                        eprintln!("{RED_ERROR_TEXT}: {s}");
+                    }
                 }
+                std::process::exit(1)
             }
-        }
+        },
+        Action::Decrypt(d) => match onetime_cli::decrypt_file(&d) {
+            Ok(_) => {
+                println!("Successfully decrypted {}", &d.file);
+            }
+            Err(e) => {
+                match e {
+                    Error::IoError(io_e) => {
+                        eprintln!(
+                            "{RED_ERROR_TEXT}: File: {0}; {BOLD_START}{1}{STYLE_END}",
+                            io_e.file, io_e.error
+                        );
+                    }
+                    Error::InvalidInput(s) => {
+                        eprintln!("{RED_ERROR_TEXT}: {s}");
+                    }
+                }
+                std::process::exit(1)
+            }
+        },
     }
 }

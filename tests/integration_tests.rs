@@ -233,9 +233,15 @@ fn test_delete_after_encryption() {
         .stdout("Successfully encrypted file1.txt\n")
         .stderr("");
 
-    assert_path_not_found(&format!("{FILES_DIR}/test_delete_after_encryption/file1.txt"));
-    assert_path_exists(&format!("{FILES_DIR}/test_delete_after_encryption/file1.txt.otp.0"));
-    assert_path_exists(&format!("{FILES_DIR}/test_delete_after_encryption/file1.txt.otp.1"));
+    assert_path_not_found(&format!(
+        "{FILES_DIR}/test_delete_after_encryption/file1.txt"
+    ));
+    assert_path_exists(&format!(
+        "{FILES_DIR}/test_delete_after_encryption/file1.txt.otp.0"
+    ));
+    assert_path_exists(&format!(
+        "{FILES_DIR}/test_delete_after_encryption/file1.txt.otp.1"
+    ));
 }
 
 #[test]
@@ -255,7 +261,13 @@ fn test_delete_after_decryption() {
         .stdout("Successfully decrypted file2.txt\n")
         .stderr("");
 
-    assert_path_not_found(&format!("{FILES_DIR}/test_delete_after_decryption/file2.txt.otp.0"));
-    assert_path_not_found(&format!("{FILES_DIR}/test_delete_after_decryption/file2.txt.otp.1"));
-    assert_path_exists(&format!("{FILES_DIR}/test_delete_after_decryption/file2.txt"));
+    assert_path_not_found(&format!(
+        "{FILES_DIR}/test_delete_after_decryption/file2.txt.otp.0"
+    ));
+    assert_path_not_found(&format!(
+        "{FILES_DIR}/test_delete_after_decryption/file2.txt.otp.1"
+    ));
+    assert_path_exists(&format!(
+        "{FILES_DIR}/test_delete_after_decryption/file2.txt"
+    ));
 }
