@@ -10,6 +10,8 @@ This project uses semantic versioning (SemVer).
 ### Added
   - Exit with code 1 on error
   - Custom error representation (onetime_cli::Error)
+  - Parameters `--out1-suffix` and `--out2-suffix` of subcommand `encrypt`
+  - Parameters `--in1-suffix` and `--in2-suffix` of subcommand `decrypt`
 
 ### Changed
   - Improved error messages
@@ -20,6 +22,10 @@ This project uses semantic versioning (SemVer).
   - onetime_cli::encrypt now encrypts data from an array using the one-time-pad
   - onetime_cli::decrypt now decrypts data into an array using the one-time-pad
   - Return type of the functions onetime_cli::{encrypt_file, decrypt_file} changed to Result<(), onetime_cli::Error>
+
+### Removed
+  - Parameters `-1`/`--out1` and `-2`/`--out2` of subcommand `encrypt`
+  - Parameters `-1`/`--in1` and `-2`/`--in2` of subcommand `decrypt`
 
 
 ## v0.2.0 -- 2023-01-02

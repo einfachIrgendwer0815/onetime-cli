@@ -84,8 +84,8 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 ///
 /// let e = Encrypt {
 ///     file: "secret.txt".to_string(),
-///     out1: Some("secret.txt.otp.0".to_string()),
-///     out2: Some("secret.txt.otp.1".to_string()),
+///     out1_suffix: "otp.0".to_string(),
+///     out2_suffix: "otp.1".to_string(),
 ///     buffer: 1048576, // this is the default
 ///     rm: false // keep input files
 /// };
@@ -109,12 +109,12 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 /// };
 /// ```
 pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
-    assert!(e.out1.is_some());
-    assert!(e.out2.is_some());
-
     let mut f_in = open_file(&e.file, Mode::Open)?;
-    let mut f_out1 = open_file(e.out1.as_ref().unwrap(), Mode::Create)?;
-    let mut f_out2 = open_file(e.out2.as_ref().unwrap(), Mode::Create)?;
+
+    let f_out1_name = format!("{}.{}", e.file, e.out1_suffix);
+    let f_out2_name = format!("{}.{}", e.file, e.out2_suffix);
+    let mut f_out1 = open_file(&f_out1_name, Mode::Create)?;
+    let mut f_out2 = open_file(&f_out2_name, Mode::Create)?;
 
     let mut buf_in = vec![0u8; e.buffer as usize];
     let mut buf_out1 = vec![0u8; e.buffer as usize];
@@ -163,8 +163,8 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
 ///
 /// let d = Decrypt {
 ///     file: "secret.txt".to_string(),
-///     in1: Some("secret.txt.otp.0".to_string()),
-///     in2: Some("secret.txt.otp.1".to_string()),
+///     in1_suffix: "otp.0".to_string(),
+///     in2_suffix: "otp.1".to_string(),
 ///     buffer: 1048576, // this is the default
 ///     rm: false // keep input files
 /// };
@@ -188,11 +188,10 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
 /// };
 /// ```
 pub fn decrypt_file(d: &Decrypt) -> Result<(), Error> {
-    assert!(d.in1.is_some());
-    assert!(d.in2.is_some());
-
-    let mut f_in1 = open_file(d.in1.as_ref().unwrap(), Mode::Open)?;
-    let mut f_in2 = open_file(d.in2.as_ref().unwrap(), Mode::Open)?;
+    let f_in1_name = format!("{}.{}", d.file, d.in1_suffix);
+    let f_in2_name = format!("{}.{}", d.file, d.in2_suffix);
+    let mut f_in1 = open_file(&f_in1_name, Mode::Open)?;
+    let mut f_in2 = open_file(&f_in2_name, Mode::Open)?;
     let mut f_out = open_file(&d.file, Mode::Create)?;
 
     let mut buf_in1 = vec![0u8; d.buffer as usize];
@@ -223,8 +222,8 @@ pub fn decrypt_file(d: &Decrypt) -> Result<(), Error> {
     }
 
     if d.rm {
-        remove_file(d.in1.as_ref().unwrap())?;
-        remove_file(d.in2.as_ref().unwrap())?;
+        remove_file(&f_in1_name)?;
+        remove_file(&f_in2_name)?;
     }
 
     Ok(())

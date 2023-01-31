@@ -21,13 +21,29 @@ pub struct Encrypt {
     /// File to be encrypted
     pub file: String,
 
-    /// Output file one. Defaults to "<FILE>.otp.0"
-    #[arg(short = '1', long)]
-    pub out1: Option<String>,
+    /// Suffix for the name of the first output file
+    #[arg(
+        long,
+        value_name = "SUFFIX",
+        default_value = "otp.0",
+        long_help = "Suffix for the name of the first output file.\n\n\
+        Example:\n  \
+        Let's say the input file's name is 'secret.txt'. Accordingly,\n  \
+        the first output file would be named 'secret.txt.<SUFFIX>'. So,\n  \
+        assuming the specified suffix is 'encrypted_1', the resulting full\n  \
+        file name would be 'secret.txt.encrypted_1'. Note, that the suffix\n  \
+        must NOT start with a dot."
+    )]
+    pub out1_suffix: String,
 
-    /// Output file two. Defaults to "<FILE>.otp.1"
-    #[arg(short = '2', long)]
-    pub out2: Option<String>,
+    /// Suffix for the name of the second output file
+    #[arg(
+        long,
+        value_name = "SUFFIX",
+        default_value = "otp.1",
+        long_help = "The same as --out1-suffix, but for the second output file."
+    )]
+    pub out2_suffix: String,
 
     /// Buffer size in bytes
     #[arg(long, default_value = "1048576")]
@@ -38,32 +54,34 @@ pub struct Encrypt {
     pub rm: bool,
 }
 
-impl Encrypt {
-    /// Fills `self.out1` and `self.out2` with default values
-    /// if they are `None`. So afterwards, `self.out1` and `self.out2`
-    /// are always `Some`.
-    pub fn set_out_files(&mut self) {
-        if self.out1.is_none() {
-            self.out1 = Some(self.file.clone() + ".otp.0");
-        }
-        if self.out2.is_none() {
-            self.out2 = Some(self.file.clone() + ".otp.1")
-        }
-    }
-}
-
 #[derive(clap::Args, Debug)]
 pub struct Decrypt {
     /// Output file name. This is the name of the decrypted file.
     pub file: String,
 
-    /// Input file one. Defaults to "<FILE>.otp.0"
-    #[arg(short = '1', long)]
-    pub in1: Option<String>,
+    /// Suffix for the name of the first input file
+    #[arg(
+        long,
+        value_name = "SUFFIX",
+        default_value = "otp.0",
+        long_help = "Suffix for the name of the first input file.\n\n\
+        Example:\n  \
+        Let's say the output file's name is 'secret.txt'. Accordingly,\n  \
+        the first input file's name is expected to be 'secret.txt.<SUFFIX>'.\n  \
+        So, assuming the specified suffix is 'encrypted_1', the resulting full\n  \
+        file name would be 'secret.txt.encrypted_1'. Note, that the suffix\n  \
+        must NOT start with a dot."
+    )]
+    pub in1_suffix: String,
 
-    /// Input file one. Defaults to "<FILE>.otp.1"
-    #[arg(short = '2', long)]
-    pub in2: Option<String>,
+    /// Suffix for the name of the second input file
+    #[arg(
+        long,
+        value_name = "SUFFIX",
+        default_value = "otp.1",
+        long_help = "The same as --in1-suffix, but for the second input file."
+    )]
+    pub in2_suffix: String,
 
     /// Buffer size in bytes
     #[arg(long, default_value = "1048576")]
@@ -72,18 +90,4 @@ pub struct Decrypt {
     /// Delete input files after decryption
     #[arg(short, long, default_value = "false")]
     pub rm: bool,
-}
-
-impl Decrypt {
-    /// Fills `self.in1` and `self.in2` with default values
-    /// if they are `None`. So afterwards, `self.in1` and `self.in2`
-    /// are always `Some`.
-    pub fn set_in_files(&mut self) {
-        if self.in1.is_none() {
-            self.in1 = Some(self.file.clone() + ".otp.0");
-        }
-        if self.in2.is_none() {
-            self.in2 = Some(self.file.clone() + ".otp.1")
-        }
-    }
 }

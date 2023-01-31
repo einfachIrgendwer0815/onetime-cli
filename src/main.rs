@@ -11,9 +11,7 @@ fn main() {
     let args = Args::parse();
 
     match args.action {
-        Action::Encrypt(mut e) => {
-            e.set_out_files();
-
+        Action::Encrypt(e) => {
             match onetime_cli::encrypt_file(&e) {
                 Ok(_) => {
                     println!("Successfully encrypted {}", &e.file);
@@ -34,9 +32,7 @@ fn main() {
                 }
             }
         }
-        Action::Decrypt(mut d) => {
-            d.set_in_files();
-
+        Action::Decrypt(d) => {
             match onetime_cli::decrypt_file(&d) {
                 Ok(_) => {
                     println!("Successfully decrypted {}", &d.file);

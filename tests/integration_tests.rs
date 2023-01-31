@@ -176,8 +176,8 @@ fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
     let assert = cmd
         .current_dir("./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files")
         .arg("encrypt")
-        .args(["-1", "file.encrypted.part0"])
-        .args(["-2", "file.encrypted.part1"])
+        .args(["--out1-suffix", "encrypted.part0"])
+        .args(["--out2-suffix", "encrypted.part1"])
         .arg("file1.txt")
         .assert();
 
@@ -198,8 +198,8 @@ fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
     let assert = cmd
         .current_dir("./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files")
         .arg("decrypt")
-        .args(["-1", "file.encrypted.part1"])
-        .args(["-2", "file.encrypted.part0"])
+        .args(["--in1-suffix", "encrypted.part1"])
+        .args(["--in2-suffix", "encrypted.part0"])
         .arg("file1.txt")
         .assert();
 
