@@ -77,9 +77,10 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 /// Will panic if [Encrypt].out1 or [Encrypt].out2 is `None`
 ///
 /// ## Example
-/// ```ignore
+/// ```
 /// use onetime_cli::args::Encrypt;
 /// use onetime_cli::encrypt_file;
+/// use onetime_cli::Error;
 ///
 /// let e = Encrypt {
 ///     file: "secret.txt".to_string(),
@@ -95,8 +96,15 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 ///     Ok(_) => {
 ///         println!("Successfully encrypted secret.txt");
 ///     },
-///     Err((f, e)) => {
-///         eprintln!("Encrypting {f} failed. {e}");
+///     Err(e) => {
+///         match e {
+///             Error::IoError(io_e) => {
+///                 eprintln!("Encrypting {} failed. {}", io_e.file, io_e.error);
+///             }
+///             Error::InvalidInput(i) => {
+///                 eprintln!("{i}");
+///             }
+///         }
 ///     },
 /// };
 /// ```
@@ -148,9 +156,10 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
 /// Will panic if [Decrypt].in1 or [Decrypt].in2 is `None`.
 ///
 /// ## Example
-/// ```ignore
+/// ```
 /// use onetime_cli::args::Decrypt;
 /// use onetime_cli::decrypt_file;
+/// use onetime_cli::Error;
 ///
 /// let d = Decrypt {
 ///     file: "secret.txt".to_string(),
@@ -166,8 +175,15 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
 ///     Ok(_) => {
 ///         println!("Successfully decrypted secret.txt");
 ///     },
-///     Err((f, e)) => {
-///         eprintln!("Decrypting {f} failed. {e}");
+///     Err(e) => {
+///         match e {
+///             Error::IoError(io_e) => {
+///                 eprintln!("Decrypting {} failed. {}", io_e.file, io_e.error);
+///             }
+///             Error::InvalidInput(i) => {
+///                 eprintln!("{i}");
+///             }
+///         }
 ///     },
 /// };
 /// ```
