@@ -3,6 +3,7 @@ use std::{
     io,
 };
 
+/// Custom error type
 pub enum Error {
     IoError(IoError),
     InvalidInput(String),
@@ -26,6 +27,7 @@ impl Debug for Error {
     }
 }
 
+/// Variant of [Error] representing an error that occurred during file I/O
 pub struct IoError {
     pub file: String,
     pub error: io::Error,

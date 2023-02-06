@@ -1,3 +1,6 @@
+//! Configuration structs for encrypt/decrypt functions. ([encrypt_file()](crate::encrypt_file), [decrypt_file()](crate::decrypt_file))
+
+/// Configuration passed to [encrypt_file()](crate::encrypt_file)
 pub struct Encrypt {
     /// File to be encrypted
     pub file: String,
