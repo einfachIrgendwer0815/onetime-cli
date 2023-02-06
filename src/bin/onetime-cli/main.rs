@@ -1,21 +1,24 @@
-use clap::Parser;
-
-use onetime_cli::args::{Action, Args};
-
+mod clap_app;
 mod error_handler;
+
+use clap_app::{build_clap_app, Subcommand};
 use error_handler::ErrorHandler;
 
 fn main() {
-    let args = Args::parse();
+    let args = build_clap_app().get_matches();
 
-    match args.action {
-        Action::Encrypt(e) => {
+    match Subcommand::from(args) {
+        Subcommand::Encrypt(e) => {
             onetime_cli::encrypt_file(&e).unwrap_or_exit(1);
             println!("Successfully encrypted {}", e.file);
         }
-        Action::Decrypt(d) => {
+        Subcommand::Decrypt(d) => {
             onetime_cli::decrypt_file(&d).unwrap_or_exit(1);
             println!("Successfully decrypted {}", d.file);
+        }
+        Subcommand::None => {
+            let mut cmd = clap_app::build_clap_app();
+            println!("{}", cmd.render_help());
         }
     }
 }
