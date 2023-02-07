@@ -26,7 +26,7 @@ impl From<ArgMatches> for Subcommand {
                 match value.subcommand_name().unwrap() {
                     "encrypt" => Subcommand::Encrypt(cfg),
                     "decrypt" => Subcommand::Decrypt(cfg),
-                    _ => unreachable!("there are no other possible subcommands")
+                    _ => unreachable!("there are no other possible subcommands"),
                 }
             }
             _ => Self::None,

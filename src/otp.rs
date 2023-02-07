@@ -1,7 +1,7 @@
 use crate::fs::Mode;
 use crate::fs::{open_file, read, remove_file, write};
-use crate::Error;
 use crate::Config;
+use crate::Error;
 
 use rand::Rng;
 
