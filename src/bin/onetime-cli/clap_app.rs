@@ -3,31 +3,32 @@ use clap::{
     ArgMatches, Command,
 };
 
-use onetime_cli::args::{Decrypt, Encrypt};
+use onetime_cli::Config;
 
 pub enum Subcommand {
-    Encrypt(Encrypt),
-    Decrypt(Decrypt),
+    Encrypt(Config),
+    Decrypt(Config),
     None,
 }
 
 impl From<ArgMatches> for Subcommand {
     fn from(value: ArgMatches) -> Self {
         match value.subcommand() {
-            Some(("encrypt", args)) => Self::Encrypt(Encrypt {
-                file: args.get_one::<String>("file").unwrap().to_string(),
-                out1_suffix: args.get_one::<String>("out1_suffix").unwrap().to_string(),
-                out2_suffix: args.get_one::<String>("out2_suffix").unwrap().to_string(),
-                buffer: *args.get_one::<u32>("buffer").unwrap(),
-                rm: args.get_flag("remove_input"),
-            }),
-            Some(("decrypt", args)) => Self::Decrypt(Decrypt {
-                file: args.get_one::<String>("file").unwrap().to_string(),
-                in1_suffix: args.get_one::<String>("in1_suffix").unwrap().to_string(),
-                in2_suffix: args.get_one::<String>("in2_suffix").unwrap().to_string(),
-                buffer: *args.get_one::<u32>("buffer").unwrap(),
-                rm: args.get_flag("remove_input"),
-            }),
+            Some(("encrypt", args)) | Some(("decrypt", args)) => {
+                let cfg = Config {
+                    file: args.get_one::<String>("file").unwrap().to_string(),
+                    suffix1: args.get_one::<String>("suffix1").unwrap().to_string(),
+                    suffix2: args.get_one::<String>("suffix2").unwrap().to_string(),
+                    buffer: *args.get_one::<u32>("buffer").unwrap(),
+                    rm: args.get_flag("remove_input"),
+                };
+
+                match value.subcommand_name().unwrap() {
+                    "encrypt" => Subcommand::Encrypt(cfg),
+                    "decrypt" => Subcommand::Decrypt(cfg),
+                    _ => unreachable!("there are no other possible subcommands")
+                }
+            }
             _ => Self::None,
         }
     }
@@ -63,7 +64,7 @@ fn build_subcommand_encrypt(cmd: Command) -> Command {
                     .help("File to be encrypted"),
             )
             .arg(
-                Arg::new("out1_suffix")
+                Arg::new("suffix1")
                     .long("out1-suffix")
                     .value_name("suffix")
                     .default_value("otp.0")
@@ -79,7 +80,7 @@ fn build_subcommand_encrypt(cmd: Command) -> Command {
                     ),
             )
             .arg(
-                Arg::new("out2_suffix")
+                Arg::new("suffix2")
                     .long("out2-suffix")
                     .value_name("suffix")
                     .default_value("otp.1")
@@ -117,7 +118,7 @@ fn build_subcommand_decrypt(cmd: Command) -> Command {
                         .help("Output file name. This is the name of the decrypted file.")
                 )
                 .arg(
-                    Arg::new("in1_suffix")
+                    Arg::new("suffix1")
                         .long("in1-suffix")
                         .value_name("suffix")
                         .default_value("otp.0")
@@ -133,7 +134,7 @@ fn build_subcommand_decrypt(cmd: Command) -> Command {
                         )
                 )
                 .arg(
-                    Arg::new("in2_suffix")
+                    Arg::new("suffix2")
                         .long("in2-suffix")
                         .value_name("suffix")
                         .default_value("otp.1")

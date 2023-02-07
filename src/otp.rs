@@ -1,7 +1,7 @@
-use crate::args::{Decrypt, Encrypt};
 use crate::fs::Mode;
 use crate::fs::{open_file, read, remove_file, write};
 use crate::Error;
+use crate::Config;
 
 use rand::Rng;
 
@@ -67,30 +67,21 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
     }
 }
 
-/// Encrypts a file using the options wrapped in an [Encrypt].
+/// Encrypts a file using the options wrapped in a [Config].
 ///
 /// ## Error
 ///
 /// Returns an error if any of the I/O operations fail.
 ///
-/// ## Panic
-/// Will panic if [Encrypt].out1 or [Encrypt].out2 is `None`
-///
 /// ## Example
 /// ```
-/// use onetime_cli::args::Encrypt;
+/// use onetime_cli::Config;
 /// use onetime_cli::encrypt_file;
 /// use onetime_cli::Error;
 ///
-/// let e = Encrypt {
-///     file: "secret.txt".to_string(),
-///     out1_suffix: "otp.0".to_string(),
-///     out2_suffix: "otp.1".to_string(),
-///     buffer: 1048576, // this is the default
-///     rm: false // keep input files
-/// };
+/// let c = Config::new("secret.txt");
 ///
-/// let res = encrypt_file(&e);
+/// let res = encrypt_file(&c);
 ///
 /// match res {
 ///     Ok(_) => {
@@ -108,17 +99,17 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 ///     },
 /// };
 /// ```
-pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
-    let mut f_in = open_file(&e.file, Mode::Open)?;
+pub fn encrypt_file(c: &Config) -> Result<(), Error> {
+    let mut f_in = open_file(&c.file, Mode::Open)?;
 
-    let f_out1_name = format!("{}.{}", e.file, e.out1_suffix);
-    let f_out2_name = format!("{}.{}", e.file, e.out2_suffix);
+    let f_out1_name = format!("{}.{}", c.file, c.suffix1);
+    let f_out2_name = format!("{}.{}", c.file, c.suffix2);
     let mut f_out1 = open_file(&f_out1_name, Mode::Create)?;
     let mut f_out2 = open_file(&f_out2_name, Mode::Create)?;
 
-    let mut buf_in = vec![0u8; e.buffer as usize];
-    let mut buf_out1 = vec![0u8; e.buffer as usize];
-    let mut buf_out2 = vec![0u8; e.buffer as usize];
+    let mut buf_in = vec![0u8; c.buffer as usize];
+    let mut buf_out1 = vec![0u8; c.buffer as usize];
+    let mut buf_out2 = vec![0u8; c.buffer as usize];
 
     loop {
         let bytes = read(&mut f_in, &mut buf_in)?;
@@ -137,14 +128,14 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
         write(&mut f_out2, &buf_out2[..bytes])?;
     }
 
-    if e.rm {
-        remove_file(&e.file)?;
+    if c.rm {
+        remove_file(&c.file)?;
     }
 
     Ok(())
 }
 
-/// Decrypts a file using the options wrapped in a [Decrypt].
+/// Decrypts a file using the options wrapped in a [Config].
 ///
 /// ## Error
 ///
@@ -152,24 +143,15 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
 ///  - any of the I/O operations fail
 ///  - the two input files differ in length
 ///
-/// ## Panic
-/// Will panic if [Decrypt].in1 or [Decrypt].in2 is `None`.
-///
 /// ## Example
 /// ```
-/// use onetime_cli::args::Decrypt;
+/// use onetime_cli::Config;
 /// use onetime_cli::decrypt_file;
 /// use onetime_cli::Error;
 ///
-/// let d = Decrypt {
-///     file: "secret.txt".to_string(),
-///     in1_suffix: "otp.0".to_string(),
-///     in2_suffix: "otp.1".to_string(),
-///     buffer: 1048576, // this is the default
-///     rm: false // keep input files
-/// };
+/// let c = Config::new("secret.txt");
 ///
-/// let res = decrypt_file(&d);
+/// let res = decrypt_file(&c);
 ///
 /// match res {
 ///     Ok(_) => {
@@ -187,16 +169,16 @@ pub fn encrypt_file(e: &Encrypt) -> Result<(), Error> {
 ///     },
 /// };
 /// ```
-pub fn decrypt_file(d: &Decrypt) -> Result<(), Error> {
-    let f_in1_name = format!("{}.{}", d.file, d.in1_suffix);
-    let f_in2_name = format!("{}.{}", d.file, d.in2_suffix);
+pub fn decrypt_file(c: &Config) -> Result<(), Error> {
+    let f_in1_name = format!("{}.{}", c.file, c.suffix1);
+    let f_in2_name = format!("{}.{}", c.file, c.suffix2);
     let mut f_in1 = open_file(&f_in1_name, Mode::Open)?;
     let mut f_in2 = open_file(&f_in2_name, Mode::Open)?;
-    let mut f_out = open_file(&d.file, Mode::Create)?;
+    let mut f_out = open_file(&c.file, Mode::Create)?;
 
-    let mut buf_in1 = vec![0u8; d.buffer as usize];
-    let mut buf_in2 = vec![0u8; d.buffer as usize];
-    let mut buf_out = vec![0u8; d.buffer as usize];
+    let mut buf_in1 = vec![0u8; c.buffer as usize];
+    let mut buf_in2 = vec![0u8; c.buffer as usize];
+    let mut buf_out = vec![0u8; c.buffer as usize];
 
     loop {
         let bytes_1 = read(&mut f_in1, &mut buf_in1)?;
@@ -221,7 +203,7 @@ pub fn decrypt_file(d: &Decrypt) -> Result<(), Error> {
         write(&mut f_out, &buf_out[..bytes_1])?;
     }
 
-    if d.rm {
+    if c.rm {
         remove_file(&f_in1_name)?;
         remove_file(&f_in2_name)?;
     }

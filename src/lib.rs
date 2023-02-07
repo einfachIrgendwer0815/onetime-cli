@@ -30,11 +30,11 @@
 //! onetime-cli --help
 //! ```
 
-pub mod args;
+mod config;
 mod error;
-
 mod fs;
 mod otp;
 
+pub use config::Config;
 pub use error::{Error, IoError};
 pub use otp::{decrypt, decrypt_file, encrypt, encrypt_file};
