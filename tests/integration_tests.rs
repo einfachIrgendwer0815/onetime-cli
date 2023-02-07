@@ -1,5 +1,6 @@
 use assert_cmd::Command;
 use md5_rs::Context;
+use scopeguard::defer;
 use std::ffi::OsString;
 use std::fs::File;
 use std::fs::{copy, create_dir, create_dir_all, metadata, read_dir, remove_dir_all, remove_file};
@@ -123,6 +124,10 @@ fn assert_path_not_found(path: &str) {
 fn test_encrypt_decrypt() {
     copy_files("files_1", "test_encrypt_decrypt").unwrap();
 
+    defer! {
+        clear_files("test_encrypt_decrypt")
+    }
+
     let original_md5 = get_md5_sum("./tests/files/test_encrypt_decrypt/file1.txt").unwrap();
 
     // Encrypt command
@@ -165,6 +170,10 @@ fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
         "test_encrypt_decrypt_with_manually_set_input_and_output_files",
     )
     .unwrap();
+
+    defer! {
+        clear_files("test_encrypt_decrypt_with_manually_set_input_and_output_files")
+    }
 
     let original_md5 = get_md5_sum(
         "./tests/files/test_encrypt_decrypt_with_manually_set_input_and_output_files/file1.txt",
@@ -220,6 +229,10 @@ fn test_encrypt_decrypt_with_manually_set_input_and_output_files() {
 fn test_delete_after_encryption() {
     copy_files("files_1", "test_delete_after_encryption").unwrap();
 
+    defer! {
+        clear_files("test_delete_after_encryption")
+    }
+
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
     let assert = cmd
         .current_dir("./tests/files/test_delete_after_encryption")
@@ -247,6 +260,10 @@ fn test_delete_after_encryption() {
 #[test]
 fn test_delete_after_decryption() {
     copy_files("files_2", "test_delete_after_decryption").unwrap();
+
+    defer! {
+        clear_files("test_delete_after_decryption")
+    }
 
     let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
     let assert = cmd
