@@ -1,3 +1,4 @@
+use crate::fs::extend_extension;
 use crate::fs::Mode;
 use crate::fs::{open_file, read, remove_file, write};
 use crate::Config;
@@ -102,8 +103,9 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 pub fn encrypt_file(c: &Config) -> Result<(), Error> {
     let mut f_in = open_file(&c.file, Mode::Open)?;
 
-    let f_out1_name = format!("{}.{}", c.file, c.suffix1);
-    let f_out2_name = format!("{}.{}", c.file, c.suffix2);
+    let f_out1_name = extend_extension(&c.file, &c.suffix1);
+    let f_out2_name = extend_extension(&c.file, &c.suffix2);
+
     let mut f_out1 = open_file(&f_out1_name, Mode::Create)?;
     let mut f_out2 = open_file(&f_out2_name, Mode::Create)?;
 
@@ -170,8 +172,9 @@ pub fn encrypt_file(c: &Config) -> Result<(), Error> {
 /// };
 /// ```
 pub fn decrypt_file(c: &Config) -> Result<(), Error> {
-    let f_in1_name = format!("{}.{}", c.file, c.suffix1);
-    let f_in2_name = format!("{}.{}", c.file, c.suffix2);
+    let f_in1_name = extend_extension(&c.file, &c.suffix1);
+    let f_in2_name = extend_extension(&c.file, &c.suffix2);
+
     let mut f_in1 = open_file(&f_in1_name, Mode::Open)?;
     let mut f_in2 = open_file(&f_in2_name, Mode::Open)?;
     let mut f_out = open_file(&c.file, Mode::Create)?;

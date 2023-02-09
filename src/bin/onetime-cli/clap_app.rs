@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, value_parser, Arg, ArgAction,
     ArgMatches, Command,
@@ -16,7 +18,7 @@ impl From<ArgMatches> for Subcommand {
         match value.subcommand() {
             Some(("encrypt", args)) | Some(("decrypt", args)) => {
                 let cfg = Config {
-                    file: args.get_one::<String>("file").unwrap().to_string(),
+                    file: PathBuf::from(args.get_one::<String>("file").unwrap()),
                     suffix1: args.get_one::<String>("suffix1").unwrap().to_string(),
                     suffix2: args.get_one::<String>("suffix2").unwrap().to_string(),
                     buffer: *args.get_one::<u32>("buffer").unwrap(),
