@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 /// Configuration passed to [`encrypt_file`](crate::encrypt_file) or [`decrypt_file`](crate::decrypt_file)
+#[derive(Clone)]
 pub struct Config {
     /// File to be encrypted
     pub file: PathBuf,
