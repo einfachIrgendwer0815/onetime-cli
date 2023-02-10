@@ -72,7 +72,7 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
 ///
 /// ## Errors
 ///
-/// Returns an error if any of the I/O operations fail.
+/// Returns an [`Error::IoError`](Error::IoError) if any of the I/O operations fail.
 ///
 /// ## Example
 /// ```
@@ -141,9 +141,9 @@ pub fn encrypt_file(c: &Config) -> Result<(), Error> {
 ///
 /// ## Errors
 ///
-/// Returns an error if:
-///  - any of the I/O operations fail
-///  - the two input files differ in length
+/// Returns an [`Error`] if:
+///  - any of the I/O operations fail ([`IoError`](Error::IoError))
+///  - the two input files differ in length ([`InvalidInput`](Error::InvalidInput))
 ///
 /// ## Example
 /// ```

@@ -3,9 +3,14 @@ use std::{
     io,
 };
 
-/// Custom error type
+/// Crate specific error type
 pub enum Error {
+    /// An error that occurred during an I/O operation. See [`IoError`](IoError)
     IoError(IoError),
+
+    /// An error that is related to input data being invalid. Each function
+    /// that possibly returns this error has detailed information about when
+    /// it returns this error type.
     InvalidInput(String),
 }
 
@@ -29,7 +34,10 @@ impl Debug for Error {
 
 /// Variant of [`Error`] representing an error that occurred during file I/O
 pub struct IoError {
+    /// The file that the operation was working on or related to
     pub file: String,
+
+    /// The actual [`std::io::Error`] that occurred
     pub error: io::Error,
 }
 

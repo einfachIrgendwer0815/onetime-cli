@@ -19,6 +19,8 @@ pub struct Config {
 }
 
 impl Config {
+    /// Constructs a new `Config` with the given file(-path).
+    /// Other fields are filled with default values.
     pub fn new(file: &str) -> Self {
         Self {
             file: PathBuf::from(file),
@@ -26,6 +28,9 @@ impl Config {
         }
     }
 
+    /// Constructs a new `Config` with the given file(-path)
+    /// and suffixes. Other fields are filled with
+    /// default values.
     pub fn new_with_suffixes(file: &str, suffix1: &str, suffix2: &str) -> Self {
         Self {
             file: PathBuf::from(file),
