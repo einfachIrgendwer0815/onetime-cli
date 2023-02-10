@@ -20,7 +20,7 @@
 [issues_img]:https://img.shields.io/github/issues/einfachIrgendwer0815/onetime-cli
 [issues_lnk]:https://github.com/einfachIrgendwer0815/onetime-cli/issues
 
-Encrypt / decrypt files using the one-time-pad.
+Encrypt / decrypt files using the one-time pad.
 
 ## Install
 

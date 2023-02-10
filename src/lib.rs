@@ -1,6 +1,6 @@
 //! # Onetime-cli
 //!
-//!Encrypt / decrypt files using the one-time-pad.
+//!Encrypt / decrypt files using the one-time pad.
 //!
 //! ## Usage
 //!

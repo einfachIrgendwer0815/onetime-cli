@@ -6,7 +6,7 @@ use crate::Error;
 
 use rand::Rng;
 
-/// Encrypts data using the one-time-pad.
+/// Encrypts data using the one-time pad.
 ///
 /// ## Panics
 /// Will panic if either of `buf_out1` or `buf_out2` is smaller than `buf_in`.
@@ -37,7 +37,7 @@ pub fn encrypt(buf_in: &[u8], buf_out1: &mut [u8], buf_out2: &mut [u8]) {
     }
 }
 
-/// Decrypts data using the one-time-pad.
+/// Decrypts data using the one-time pad.
 ///
 /// `buf_in1` and `buf_in2` must have the same size.
 ///

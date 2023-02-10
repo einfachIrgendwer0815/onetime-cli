@@ -19,8 +19,8 @@ This project uses semantic versioning (SemVer).
 ### [BREAKING] changes
   - Moved previous functionality of onetime_cli::encrypt to onetime_cli::encrypt_file
   - Moved previous functionality of onetime_cli::decrypt to onetime_cli::decrypt_file
-  - onetime_cli::encrypt now encrypts data from an array using the one-time-pad
-  - onetime_cli::decrypt now decrypts data into an array using the one-time-pad
+  - onetime_cli::encrypt now encrypts data from an array using the one-time pad
+  - onetime_cli::decrypt now decrypts data into an array using the one-time pad
   - Return type of the functions onetime_cli::{encrypt_file, decrypt_file} changed to Result<(), onetime_cli::Error>
 
 ### Removed
