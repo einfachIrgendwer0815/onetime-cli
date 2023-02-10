@@ -30,6 +30,8 @@
 //! onetime-cli --help
 //! ```
 
+#![warn(missing_docs)]
+
 mod config;
 mod error;
 mod fs;
