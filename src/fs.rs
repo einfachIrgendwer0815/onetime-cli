@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 
 use crate::{Error, IoError};
 
+#[derive(Clone, Copy)]
 pub enum Mode {
     Open,
     Create,
