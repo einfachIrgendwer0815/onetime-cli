@@ -27,7 +27,7 @@ impl Debug for Error {
     }
 }
 
-/// Variant of [Error] representing an error that occurred during file I/O
+/// Variant of [`Error`] representing an error that occurred during file I/O
 pub struct IoError {
     pub file: String,
     pub error: io::Error,

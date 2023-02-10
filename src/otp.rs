@@ -8,7 +8,7 @@ use rand::Rng;
 
 /// Encrypts data using the one-time-pad.
 ///
-/// ## Panic
+/// ## Panics
 /// Will panic if either of `buf_out1` or `buf_out2` is smaller than `buf_in`.
 ///
 /// ## Example
@@ -41,7 +41,7 @@ pub fn encrypt(buf_in: &[u8], buf_out1: &mut [u8], buf_out2: &mut [u8]) {
 ///
 /// `buf_in1` and `buf_in2` must have the same size.
 ///
-/// ## Panic
+/// ## Panics
 /// Will panic if:
 ///   * `buf_in1` and `buf_in2` don't have the same size.
 ///   * `buf_out` is smaller than the `buf_in`s.
@@ -68,9 +68,9 @@ pub fn decrypt(buf_in1: &[u8], buf_in2: &[u8], buf_out: &mut [u8]) {
     }
 }
 
-/// Encrypts a file using the options wrapped in a [Config].
+/// Encrypts a file using the options wrapped in a [`Config`].
 ///
-/// ## Error
+/// ## Errors
 ///
 /// Returns an error if any of the I/O operations fail.
 ///
@@ -137,9 +137,9 @@ pub fn encrypt_file(c: &Config) -> Result<(), Error> {
     Ok(())
 }
 
-/// Decrypts a file using the options wrapped in a [Config].
+/// Decrypts a file using the options wrapped in a [`Config`].
 ///
-/// ## Error
+/// ## Errors
 ///
 /// Returns an error if:
 ///  - any of the I/O operations fail
