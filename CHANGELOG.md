@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project uses semantic versioning (SemVer).
 
 
-## Unreleased
+## v0.3.0 -- 2023-02-11
 
 ### Added
   - Exit with code 1 on error
