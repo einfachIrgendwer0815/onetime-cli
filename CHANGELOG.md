@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 This project uses semantic versioning (SemVer).
 
 
+## Unreleased
+
+### Added
+  - `-q`/`--quiet` which turns off printing to stdout
+
+
 ## v0.3.0 -- 2023-02-11
 
 ### Added

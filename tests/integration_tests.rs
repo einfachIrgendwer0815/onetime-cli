@@ -288,3 +288,48 @@ fn test_delete_after_decryption() {
         "{FILES_DIR}/test_delete_after_decryption/file2.txt"
     ));
 }
+
+#[test]
+fn test_encrypt_decrypt_quiet() {
+    copy_files("files_1", "test_encrypt_decrypt_quiet").unwrap();
+
+    defer! {
+        clear_files("test_encrypt_decrypt_quiet")
+    }
+
+    let original_md5 = get_md5_sum("./tests/files/test_encrypt_decrypt_quiet/file1.txt").unwrap();
+
+    // Encrypt command
+    let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
+    let assert = cmd
+        .current_dir("./tests/files/test_encrypt_decrypt_quiet")
+        .arg("-q")
+        .arg("encrypt")
+        .arg("file1.txt")
+        .assert();
+
+    assert
+        .success()
+        .stdout("")
+        .stderr("");
+
+    remove_file("./tests/files/test_encrypt_decrypt_quiet/file1.txt").unwrap();
+
+    // Decrypt command
+    let mut cmd = Command::cargo_bin(CARGO_BIN_NAME).unwrap();
+    let assert = cmd
+        .current_dir("./tests/files/test_encrypt_decrypt_quiet")
+        .arg("-q")
+        .arg("decrypt")
+        .arg("file1.txt")
+        .assert();
+
+    assert
+        .success()
+        .stdout("")
+        .stderr("");
+
+    let md5_now = get_md5_sum("./tests/files/test_encrypt_decrypt_quiet/file1.txt").unwrap();
+
+    assert_eq!(original_md5, md5_now);
+}

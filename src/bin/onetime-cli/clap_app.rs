@@ -23,6 +23,7 @@ impl From<ArgMatches> for Subcommand {
                     suffix2: args.get_one::<String>("suffix2").unwrap().to_string(),
                     buffer: *args.get_one::<u32>("buffer").unwrap(),
                     rm: args.get_flag("remove_input"),
+                    quiet: value.get_flag("quiet"),
                 };
 
                 match value.subcommand_name().unwrap() {
@@ -52,6 +53,13 @@ pub fn build_clap_app() -> Command {
 
 fn build_main_args(cmd: Command) -> Command {
     cmd
+        .arg(
+            Arg::new("quiet")
+                .short('q')
+                .long("quiet")
+                .action(ArgAction::SetTrue)
+                .help("Don't print anything to stdout")
+        )
 }
 
 fn build_subcommand_encrypt(cmd: Command) -> Command {

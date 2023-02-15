@@ -17,6 +17,9 @@ pub struct Config {
 
     /// Delete input file after encryption
     pub rm: bool,
+
+    /// Don't print anything to stdout
+    pub quiet: bool,
 }
 
 impl Config {
@@ -48,6 +51,7 @@ impl Config {
             suffix2: "otp.1".to_string(),
             buffer: 1048576,
             rm: false,
+            quiet: true,
         }
     }
 }
