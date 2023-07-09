@@ -5,10 +5,13 @@ All notable changes to this project will be documented in this file.
 This project uses semantic versioning (SemVer).
 
 
-## Unreleased
+## v0.4.0 -- 2023-07-09
 
 ### Added
   - `-q`/`--quiet` which turns off printing to stdout
+
+### [BREAKING] changes
+  - `encrypt()` and `decrypt()` will no longer panic, but return Errors instead
 
 
 ## v0.3.0 -- 2023-02-11
