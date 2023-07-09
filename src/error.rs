@@ -12,6 +12,9 @@ pub enum Error {
     /// that possibly returns this error has detailed information about when
     /// it returns this error type.
     InvalidInput(String),
+
+    /// At least one passed buffer does not fulfill its size requirements
+    InvalidBufferSizes,
 }
 
 impl Display for Error {
@@ -19,6 +22,7 @@ impl Display for Error {
         match &self {
             Error::IoError(io_e) => f.write_fmt(format_args!("{io_e}")),
             Error::InvalidInput(e) => f.write_fmt(format_args!("Invalid input: {e}")),
+            Error::InvalidBufferSizes => f.write_str("Invalid buffer sizes"),
         }
     }
 }
@@ -28,6 +32,7 @@ impl Debug for Error {
         match &self {
             Error::IoError(io_e) => f.write_fmt(format_args!("IoError ({io_e:?})")),
             Error::InvalidInput(e) => f.write_fmt(format_args!("InvalidInput ({e:?})")),
+            Error::InvalidBufferSizes => f.write_str("Invalid buffer sizes"),
         }
     }
 }

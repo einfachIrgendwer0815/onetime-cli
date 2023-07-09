@@ -31,6 +31,9 @@ pub fn err_to_text(e: Error) -> String {
         Error::InvalidInput(s) => {
             format!("{RED_ERROR_TEXT}: {s}")
         }
+        Error::InvalidBufferSizes => {
+            format!("{RED_ERROR_TEXT}: Invalid buffer sizes")
+        }
     }
 }
 
