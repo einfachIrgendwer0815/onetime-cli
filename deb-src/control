@@ -1,0 +1,8 @@
+Package: onetime-cli
+Version: VERSION
+Architecture: amd64
+Installed-Size: INSTALLED_SIZE
+Priority: optional
+Homepage: HOMEPAGE
+Maintainer: einfachIrgendwer0815
+Description: DESCRIPTION
