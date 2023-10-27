@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 This project uses semantic versioning (SemVer).
 
 
+## v0.4.1 -- 2023-10-27
+
+Dependency updates
+
+
 ## v0.4.0 -- 2023-07-09
 
 ### Added
