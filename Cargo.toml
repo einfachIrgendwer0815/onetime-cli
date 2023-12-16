@@ -8,6 +8,7 @@ description = "Encrypt / decrypt files using the one-time pad."
 repository = "https://github.com/einfachIrgendwer0815/onetime-cli"
 keywords = ["otp", "one-time-pad", "cli", "encryption", "file-encryption"]
 categories = ["command-line-utilities"]
+exclude = ["deb-src/", "build_deb.sh", "tests"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
